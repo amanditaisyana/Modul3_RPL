@@ -1,0 +1,20 @@
+# Amandita Isyana_F5212510017
+def tampilkan_biodata():
+    print("=" * 40)
+    print("              BIODATA DIRI              ")
+    print("=" * 40)
+    
+    # Silakan ubah data di bawah sesuai dengan data diri Anda
+    nama = "AMANDITA"
+    npm = "F5212510017"
+    jurusan = "SISTEM INFOMASI"
+    angkatan = "2025"
+    
+    print(f"Nama     : {nama}")
+    print(f"NPM      : {npm}")
+    print(f"Jurusan  : {jurusan}")
+    print(f"Angkatan : {angkatan}")
+    print("=" * 40)
+
+if __name__ == "__main__":
+    tampilkan_biodata()
