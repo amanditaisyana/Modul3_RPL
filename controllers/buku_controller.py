@@ -10,8 +10,12 @@ class BukuController:
         self.view = BukuView()
         
         # Binding (mengikat) tombol di View dengan fungsi di Controller
+        self.view.btn_update.configure(command=self.update_data)
         self.view.btn_simpan.configure(command=self.simpan_data)
-        
+        self.view.btn_delete.configure(command=self.delete_data)
+
+        self.view.tabel.bind("<<TreeviewSelect>>", self.select_item)
+       
         # Memuat data ke tabel saat aplikasi pertama kali dibuka
         self.muat_data_tabel()
         
@@ -26,7 +30,71 @@ class BukuController:
         # Memasukkan data baru ke dalam tabel View
         for buku in data_buku:
             self.view.tabel.insert("", "end", values=(buku["id_buku"], buku["judul"], buku["penulis"], buku["tahun_terbit"]))
+
+       #📍 POSISI 2: TAMBAHKAN KETIGA FUNGSI INI DI SINI 
+       #(Di bawah muat_data_tabel dan sebelum simpan_data atau run)
+    def select_item(self, event):
+        selected_item = self.view.tabel.focus()
+        if selected_item:
+            values = self.view.tabel.item(selected_item, 'values')
+            if values:
+                self.view.entry_judul.delete(0, 'end')
+                self.view.entry_judul.insert(0, values[1])
+                self.view.entry_Penulis.delete(0, 'end')
+                self.view.entry_Penulis.insert(0, values[2])
+                self.view.entry_tahun.delete(0, 'end')
+                self.view.entry_tahun.insert(0, values[3])
+
+    def update_data(self):
+        selected_item = self.view.tabel.focus()
+        if not selected_item:
+            messagebox.showwarning("Peringatan", "Pilih baris data buku pada tabel yang ingin diperbarui!")
+            return
             
+        values = self.view.tabel.item(selected_item, 'values')
+        id_buku = values[0]
+        
+        judul = self.view.entry_judul.get()
+        penulis = self.view.entry_Penulis.get()
+        tahun = self.view.entry_tahun.get()
+        
+        if not judul or not penulis or not tahun:
+            messagebox.showwarning("Peringatan", "Semua kolom form harus diisi!")
+            return
+            
+        berhasil = self.model.update_buku(id_buku, judul, penulis, tahun)
+        if berhasil:
+            messagebox.showinfo("Sukses", "Data buku berhasil diperbarui!")
+            self.view.entry_judul.delete(0, 'end')
+            self.view.entry_Penulis.delete(0, 'end')
+            self.view.entry_tahun.delete(0, 'end')
+            self.muat_data_tabel()
+        else:
+            messagebox.showerror("Error", "Terjadi kesalahan saat memperbarui data.")
+
+    def delete_data(self):
+        selected_item = self.view.tabel.focus()
+        if not selected_item:
+            messagebox.showwarning("Peringatan", "Pilih baris data buku pada tabel yang ingin dihapus!")
+            return
+                        
+        values = self.view.tabel.item(selected_item, 'values')
+        id_buku = values[0]  # Mengambil nilai ID dari kolom pertama
+        
+        konfirmasi = messagebox.askyesno("Konfirmasi", "Apakah Anda yakin ingin menghapus data buku ini?")
+        if konfirmasi:
+            # Memanggil fungsi dalate dari model
+            berhasil = self.model.delete_buku(id_buku)
+            
+            if berhasil:
+                messagebox.showinfo("Sukses", "Data buku berhasil dihapus!")
+                self.view.entry_judul.delete(0, 'end')
+                self.view.entry_Penulis.delete(0, 'end')  
+                self.view.entry_tahun.delete(0, 'end')
+                self.muat_data_tabel()
+            else:
+                messagebox.showerror("Error", "Terjadi kesalahan saat menghapus data.")
+
     def simpan_data(self):
         # Mengambil teks dari inputan di View
         judul = self.view.entry_judul.get()
@@ -45,7 +113,7 @@ class BukuController:
             messagebox.showinfo("Sukses", "Data buku berhasil disimpan!")
             # Bersihkan form input
             self.view.entry_judul.delete(0, 'end')
-            self.view.entry_penulis.delete(0, 'end')
+            self.view.entry_Penulis.delete(0, 'end')
             self.view.entry_tahun.delete(0, 'end')
             # Muat ulang tabel agar data baru muncul
             self.muat_data_tabel()

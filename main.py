@@ -1,8 +1,7 @@
 # Amandita_017
-from controllers.buku_controller import BukuController
+from controllers.Anggota_Controller import AnggotaController
 
 if __name__ == "__main__":
-    app = BukuController()
-    app.run() 
-
+    app = AnggotaController()
+    app.run()
     
