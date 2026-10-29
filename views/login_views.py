@@ -1,3 +1,4 @@
+# Amandita Isyana_017
 import customtkinter as ctk
 
 class LoginView(ctk.CTk):
