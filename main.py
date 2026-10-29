@@ -1,7 +1,7 @@
 # Amandita_017
-from controllers.Anggota_Controller import AnggotaController
+from controllers.auth_controller import AuthController
 
 if __name__ == "__main__":
-    app = AnggotaController()
+    app = AuthController()
     app.run()
     

@@ -19,7 +19,7 @@ class AnggotaModel:
     def create_anggota(self, nama, alamat ,):
         if self.conn:
             cursor = self.conn.cursor()
-            query = f"INSERT INTO {self.table_name} (nama, alamat ,) VALUES (%s, %s, %s)"
+            query = f"INSERT INTO {self.table_name} (nama, alamat) VALUES (%s, %s)"
             val = (nama, alamat,)
             cursor.execute(query, val)
             self.conn.commit()
@@ -27,10 +27,10 @@ class AnggotaModel:
             return True
         return False
 
-    def update_anggota(self, id_anggota, nama, alamat,):
+    def update_anggota(self, id_anggota, nama, alamat):
         if self.conn:
             cursor = self.conn.cursor()
-            query = f"UPDATE {self.table_name} SET nama = %s, alamat = WHERE id_anggota = %s"
+            query = f"UPDATE {self.table_name} SET nama = %s, alamat = %s WHERE id_anggota = %s"
             val = (nama, alamat, id_anggota)
             cursor.execute(query, val)
             self.conn.commit()
