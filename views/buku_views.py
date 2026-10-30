@@ -56,7 +56,7 @@ class BukuView(ctk.CTk):
         kolom = ("id", "judul", "penulis", "tahun")
         self.tabel = ttk.Treeview(self.frame_kanan, columns=kolom, show="headings", height=15)
         
-       
+    
         self.tabel.heading("id", text="ID")
         self.tabel.heading("judul", text="Judul Buku")
         self.tabel.heading("penulis", text="Penulis")
@@ -69,6 +69,10 @@ class BukuView(ctk.CTk):
         self.tabel.column("tahun", width=60, anchor="center")
         
         self.tabel.pack(fill="both", expand=True, padx=15, pady=10)
+
+        # Penempatan tombol Logout langsung pada jendela utama (self) atau frame yang benar
+        self.btn_logout = ctk.CTkButton(self.frame_kiri, text="Logout", fg_color="red", hover_color="darkred")
+        self.btn_logout.pack(pady=10, padx=15, fill="x")
 
 # Blok eksekusi untuk menguji tampilan grafis
 if __name__ == "__main__":

@@ -4,7 +4,7 @@ from models.buku_model import BukuModel
 from views.buku_views import BukuView
 
 class BukuController:
-    def __init__(self):
+    def __init__logout(self):
         # Menginisialisasi Model dan View
         self.model = BukuModel()
         self.view = BukuView()
@@ -71,6 +71,11 @@ class BukuController:
             self.muat_data_tabel()
         else:
             messagebox.showerror("Error", "Terjadi kesalahan saat memperbarui data.")
+# update
+    def update_data(self):
+        if self.user_role == "anggota":
+            messagebox.showerror("Akses Ditolak", "Anda tidak memiliki izin untuk memperbarui data!")
+            return
 
     def delete_data(self):
         selected_item = self.view.tabel.focus()
@@ -94,6 +99,11 @@ class BukuController:
                 self.muat_data_tabel()
             else:
                 messagebox.showerror("Error", "Terjadi kesalahan saat menghapus data.")
+# Delete
+    def delete_data(self):
+        if self.user_role == "anggota":
+            messagebox.showerror("Akses Ditolak", "Anda tidak memiliki izin untuk menghapus data!")
+            return
 
     def simpan_data(self):
         # Mengambil teks dari inputan di View
@@ -129,6 +139,7 @@ class BukuController:
         self.user_role = user_role
         self.model = BukuModel()
         self.view = BukuView()
+        self.view.btn_logout.configure(command=self.logout)
 
         # Menampilkan informasi role pada judul jendela aplikasi
         self.view.title(f"Sistem Manajemen Perpustakaan - Mode: {self.user_role.upper()}")
@@ -144,6 +155,25 @@ class BukuController:
             self.view.entry_tahun.configure(state="disabled")
 
         self.muat_data_tabel()
+
+# Tugas 2
+        if self.user_role == "anggota":
+            self.view.btn_simpan.configure(state="disabled", text="Akses Terkunci (Khusus Admin)")
+            self.view.entry_judul.configure(state="disabled")
+            self.view.entry_Penulis.configure(state="disabled")
+            self.view.entry_tahun.configure(state="disabled")
+            
+            # Tambahan untuk mengunci tombol Update dan Delete jika ada di view
+        if hasattr(self.view, 'btn_update'):
+                self.view.btn_update.configure(state="disabled")
+        if hasattr(self.view, 'btn_hapus'):
+                self.view.btn_hapus.configure(state="disabled")
+        
+            # Mengunci tombol Update dan Delete khusus untuk anggota
+        if hasattr(self.view, 'btn_update'):
+            self.view.btn_update.configure(state="disabled")
+        if hasattr(self.view, 'btn_hapus'):
+            self.view.btn_hapus.configure(state="disabled")
 
     def muat_data_tabel(self):
         for item in self.view.tabel.get_children():
@@ -174,10 +204,19 @@ class BukuController:
             self.muat_data_tabel()
         else:
             messagebox.showerror("Error", "Gagal menyimpan data.")
+# Tugas
+# Hubungkan tombol logout ke fungsi logout
+        if hasattr(self.view, 'btn_logout'):
+            self.view.btn_logout.configure(command=self.logout)
 
+    def logout(self):
+        from controllers.auth_controller import AuthController
+        if messagebox.askyesno("Konfirmasi Logout", "Apakah Anda yakin ingin keluar dari sistem?"):
+            self.view.destroy()  # Menutup jendela saat ini secara tuntas
+            app_auth = AuthController()
+            app_auth.run()
+   
     def run(self):
         self.view.mainloop()
 
-    # Fungsi untuk menjalankan aplikasi
-    def run(self):
-        self.view.mainloop()
+   

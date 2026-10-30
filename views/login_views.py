@@ -22,3 +22,4 @@ class LoginView(ctk.CTk):
 
         self.btn_login = ctk.CTkButton(self.frame, text="Masuk", fg_color="blue")
         self.btn_login.pack(pady=20, padx=20, fill="x")
+        
